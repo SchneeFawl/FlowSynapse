@@ -3,7 +3,10 @@ import BentoCard from "./bentocard";
 
 export default function RecentNote({ className = "" }: { className?: string }) {
   return (
-    <BentoCard title="Editor" className={`group relative ${className}`}>
+    <BentoCard
+      title="Recently viewed note"
+      className={`group relative ${className}`}
+    >
       {/* header */}
       <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
         <div>

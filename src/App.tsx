@@ -28,9 +28,9 @@ function App() {
         {/* dashboard space (grid) */}
         <div className="flex-1 h-full p-4 overflow-hidden">
           {/* new grid layout:
-              cols: [300px fixed] [140px fixed] [rest of the space]
+              cols: [340px fixed] [146px fixed] [rest of the space]
               rows: [1fr] [1fr] [110px fixed bottom] */}
-          <div className="grid grid-cols-[300px_140px_1fr] grid-rows-[1fr_1fr_110px] gap-4 w-full h-full">
+          <div className="grid grid-cols-[340px_160px_1fr] grid-rows-[1fr_1fr_110px] gap-4 w-full h-full">
             {/* - Left Column - */}
             {/* top left - Wellness */}
             <BentoCard
@@ -54,22 +54,27 @@ function App() {
             {/* bottom left - To-Do list */
             /* row-span-2 - takes up bottom 40% of height */}
             <BentoCard
-              title="Quick Tasks"
+              title="To-do tasks"
               className="col-start-1 col-end-2 row-start-2 row-end-3 bg-purple-500/5 border-purple-500/20"
             >
               <div className="flex flex-col gap-3 h-full justify-center">
                 {[
                   {
                     id: 1,
-                    text: "Review Physics Formulas",
+                    text: "Review the physics chapter",
                     color: "bg-purple-400",
                   },
-                  { id: 2, text: "Submit History Essay", color: "bg-blue-400" },
-                  { id: 3, text: "Call Project Partner", color: "bg-pink-400" },
+                  { id: 2, text: "Submit history notes", color: "bg-blue-400" },
+                  {
+                    id: 3,
+                    text: "Call the group for project work",
+                    color: "bg-pink-400",
+                  },
                 ].map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10
+                    transition-colors"
                   >
                     <div className={`size-2 rounded-full ${task.color}`} />
                     <span className="text-sm font-medium opacity-80 truncate">
@@ -87,59 +92,59 @@ function App() {
             </BentoCard>
 
             {/* - Right Col - */
-            /* RecentNote */}
+            /* recent note */}
             <RecentNote className="col-start-3 col-end-4 row-start-1 row-end-3 bg-orange-500/5 border-orange-500/10" />
 
             {/* - Bottom Row - */}
             {/* StepAhead timer (focus) */}
             {/* col-span-4 to span the entire width of the grid*/}
-            <BentoCard
-              className="col-span-3 row-start-3 row-end-4 flex items-center justify-between px-8 bg-orange-500/5
-              border-orange-500/20"
-            >
-              {/* title of StepAhead */}
-              <div className="flex flex-col justify-center">
-                <h3 className="text-xl font-bold text-white tracking-wide">
-                  StepAhead Focus
-                </h3>
-                <p className="text-xs text-orange-300/60 uppercase tracking-widest mt-1">
-                  Session Active
-                </p>
-              </div>
-
-              {/* controls and visualizr */}
-              <div className="flex items-center gap-6 h-full">
-                {/* visualizer */}
-                <div className="flex gap-1 items-end h-8 opacity-60">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-1 bg-orange-500 rounded-t-sm animate-pulse"
-                      style={{
-                        height: `${30 + Math.random() * 70}%`,
-                        animationDelay: `${i * 0.1}s`,
-                      }}
-                    />
-                  ))}
+            <BentoCard className="col-span-3 row-start-3 row-end-4 px-6 bg-orange-500/5 border-orange-500/20">
+              {/* title group of StepAhead */}
+              <div className="flex items-center justify-between w-full h-full px-4">
+                {/* left: title */}
+                <div className="flex flex-col justify-center min-w-0 mr-4">
+                  <h3 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">
+                    StepAhead Focus
+                  </h3>
+                  <p className="text-xs text-orange-300/60 uppercase tracking-widest mt-1">
+                    Session Active
+                  </p>
                 </div>
 
-                {/* divider line */}
-                <div className="h-8 w-px bg-white/10 mx-2" />
-
-                {/* timer */}
-                <div className="text-4xl font-mono font-bold text-white/90 tracking-tight">
-                  14:32
-                </div>
-
-                {/* resume button*/}
-                <button className="flex items-center gap-3 pl-4 pr-6 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold transition-all hover:scale-105 shadow-lg shadow-orange-500/20 group ml-4">
-                  <div className="p-1 rounded bg-white/20 group-hover:bg-white/30 transition-colors">
-                    <Play size={12} fill="currentColor" />
+                {/* right: content group (i.e. visualizer, time, button) */}
+                <div className="flex items-center gap-6 h-full shrink-0">
+                  {/* visualizer */}
+                  <div className="flex gap-1 items-end h-8 opacity-60">
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-1 bg-orange-500 rounded-t-sm animate-pulse"
+                        style={{
+                          height: `${30 + Math.random() * 70}%`,
+                          animationDelay: `${i * 0.1}s`,
+                        }}
+                      />
+                    ))}
                   </div>
-                  <span className="uppercase tracking-wider text-[10px]">
-                    Resume
-                  </span>
-                </button>
+
+                  {/* vertical vivider */}
+                  <div className="h-8 w-px bg-white/10 mx-2 hidden sm:block" />
+
+                  {/* timer */}
+                  <div className="text-3xl font-mono font-bold text-white/90 tracking-tight">
+                    14:32
+                  </div>
+
+                  {/* resume button */}
+                  <button className="flex items-center gap-3 pl-4 pr-6 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold transition-all hover:scale-105 shadow-lg shadow-orange-500/20 group ml-2">
+                    <div className="p-1 rounded bg-white/20 group-hover:bg-white/30 transition-colors">
+                      <Play size={12} fill="currentColor" />
+                    </div>
+                    <span className="uppercase tracking-wider text-[12px]">
+                      Resume
+                    </span>
+                  </button>
+                </div>
               </div>
             </BentoCard>
           </div>
