@@ -13,7 +13,9 @@ let win;
 function createWindow() {
   win = new BrowserWindow({
     width: 1200,
-    height: 800,
+    height: 730,
+    minWidth: 1200,
+    minHeight: 730,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     frame: true,
     // Removed title bar and windows default window at the top (false)

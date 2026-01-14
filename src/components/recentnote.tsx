@@ -1,9 +1,9 @@
 import { Edit3, Clock, Tag } from "lucide-react";
 import BentoCard from "./bentocard";
 
-export default function RecentNote() {
+export default function RecentNote({ className = "" }: { className?: string }) {
   return (
-    <BentoCard title="Editor" className="col-span-2 row-span-4 group relative">
+    <BentoCard title="Editor" className={`group relative ${className}`}>
       {/* header */}
       <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
         <div>
@@ -24,13 +24,13 @@ export default function RecentNote() {
         </button>
       </div>
 
-      {/* note content preview (trying to copy Editor.js look lol) */}
+      {/* note content preview (Editor.js look) */}
       <div className="space-y-4 opacity-80 font-serif text-lg leading-relaxed text-slate-200 mask-image-b">
         <p>
           <span className="font-sans text-sm font-bold text-slate-500 uppercase tracking-wider block mb-1">
             Introduction
           </span>
-          Lorem ipsum dolar or whatever that is XDDD{" "}
+          Lorem ipsum dolar{" "}
           <span className="bg-indigo-500/20 text-indigo-200 px-1 rounded">
             Newton's Cradle
           </span>{" "}
@@ -38,10 +38,10 @@ export default function RecentNote() {
         </p>
 
         <div className="pl-4 border-l-2 border-indigo-500/50 italic text-slate-400">
-          "no way another dummy text"
+          "Dummy Text"
         </div>
 
-        <p>Ts lowkenuinely frying me hmmmm sensible.</p>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit</p>
 
         {/* code block look */}
         <div className="bg-[#0f0f12]/50 p-4 rounded-lg font-mono text-sm text-green-400 border border-white/5 mt-4">
@@ -51,7 +51,7 @@ export default function RecentNote() {
       </div>
 
       {/* fade out effect at the bottom idk how */}
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0f0f12]/40 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-[#0f0f12]/40 to-transparent pointer-events-none" />
     </BentoCard>
   );
 }

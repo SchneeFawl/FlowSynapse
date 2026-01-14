@@ -20,7 +20,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
     >
       {/* logo */}
       <div className="flex flex-col items-center gap-1 mb-8 select-none">
-        <div className="size-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/20">
+        <div className="size-10 rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/20">
           FS
         </div>
       </div>
@@ -49,8 +49,9 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                 className="absolute left-14 bg-[#1e1e2e] text-indigo-300 text-[10px] font-bold px-2 py-1
                 rounded opacity-0 group-hover:opacity-100 transition-opacity border border-indigo-500/30
                 whitespace-nowrap pointer-events-none tracking-wider uppercase z-50 top-1/2 -translate-y-1/2
-                group-hover:delay-[1700ms]"
+                group-hover:delay-1700"
               >
+                {/* delay-1700 = 1700ms delay */}
                 {item.label}
               </span>
             </button>
