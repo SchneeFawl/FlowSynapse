@@ -17,13 +17,13 @@ const VerticalClock = () => {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-full font-mono text-white select-none">
+    <div className="flex flex-col items-center justify-center font-mono h-full text-white select-none">
       <div className="text-8xl font-bold leading-none tracking-tighter flex flex-col items-center">
         <span>
           {hours[0]}
           {hours[1]}
         </span>
-        <span className="animate-pulse opacity-50 my-[-10px]">:</span>
+        <span className="animate-pulse opacity-50 -my-2.5">:</span>
         <span>
           {mins[0]}
           {mins[1]}

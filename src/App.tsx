@@ -1,13 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Sidebar from "./components/sidebar";
 import BentoCard from "./components/bentocard";
 import VerticalClock from "./components/verticalclock";
 import RecentNote from "./components/recentnote"; // Import the new component
-import { Activity, Play, Pause } from "lucide-react";
+import { Activity, Play, Pause, TrendingUp, RotateCcw } from "lucide-react";
 
 function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
+
+  // StepAhead timer
+  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (isTimerActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsTimerActive(false); // Stop when hitting 0
+    }
+    return () => clearInterval(interval);
+  }, [isTimerActive, timeLeft]);
+
+  const toggleTimer = () => setIsTimerActive(!isTimerActive);
+
+  const resetTimer = () => {
+    setIsTimerActive(false);
+    setTimeLeft(20 * 60);
+  };
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
   return (
     <div
@@ -35,19 +66,48 @@ function App() {
             {/* top left - Wellness */}
             <BentoCard
               title="Wellness"
-              className="col-start-1 col-end-2 row-start-1 row-end-2 flex flex-col items-center justify-center
-                bg-emerald-500/5 border-emerald-500/20"
+              className="col-start-1 col-end-2 row-start-1 row-end-2 bg-emerald-500/5 border-emerald-500/20"
             >
-              <div className="relative size-28 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full border-4 border-white/5"></div>
-                <div
-                  className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin-slow"
-                  style={{ animationDuration: "3s" }}
-                ></div>
-                <div className="text-3xl font-bold text-white">88%</div>
-              </div>
-              <div className="mt-4 text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
-                <Activity size={14} /> Energy High
+              <div className="flex items-center justify-between h-full px-2">
+                {/* left side - spinner */}
+                <div className="flex flex-col items-center gap-2">
+                  <div className="relative size-24 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border-4 border-white/5"></div>
+                    <div
+                      className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin-slow"
+                      style={{ animationDuration: "3s" }}
+                    ></div>
+                    <div className="text-2xl font-bold text-white">88%</div>
+                  </div>
+                  <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1">
+                    <Activity size={10} /> Optimal Energy
+                  </div>
+                </div>
+
+                {/* right side - data */}
+                <div className="flex flex-col items-end justify-center h-full pt-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="p-1 rounded bg-emerald-500/20 text-emerald-400">
+                      <TrendingUp size={14} />
+                    </span>
+                    <span className="text-3xl font-bold text-white">+12%</span>
+                  </div>
+                  <div className="text-xs text-slate-400 font-medium text-right leading-tight">
+                    Recovery Score
+                    <br />
+                    <span className="opacity-50 text-[10px] uppercase tracking-wide">
+                      vs Yesterday
+                    </span>
+                  </div>
+
+                  {/* bar chart */}
+                  <div className="flex gap-1 items-end h-6 mt-4 opacity-50">
+                    <div className="w-1.5 h-3 bg-emerald-500/30 rounded-t-sm" />
+                    <div className="w-1.5 h-4 bg-emerald-500/50 rounded-t-sm" />
+                    <div className="w-1.5 h-2 bg-emerald-500/30 rounded-t-sm" />
+                    <div className="w-1.5 h-6 bg-emerald-500 rounded-t-sm" />
+                  </div>
+                </div>
               </div>
             </BentoCard>
 
@@ -99,7 +159,7 @@ function App() {
             {/* StepAhead timer (focus) */}
             {/* col-span-4 to span the entire width of the grid*/}
             <BentoCard className="col-span-3 row-start-3 row-end-4 px-6 bg-orange-500/5 border-orange-500/20">
-              {/* title group of StepAhead */}
+              {/* group of StepAhead */}
               <div className="flex items-center justify-between w-full h-full px-4">
                 {/* left: title */}
                 <div className="flex flex-col justify-center min-w-0 mr-4">
@@ -114,36 +174,79 @@ function App() {
                 {/* right: content group (i.e. visualizer, time, button) */}
                 <div className="flex items-center gap-6 h-full shrink-0">
                   {/* visualizer */}
-                  <div className="flex gap-1 items-end h-8 opacity-60">
+                  <div
+                    className={`flex gap-1 items-end h-8 opacity-60 ${
+                      !isTimerActive && "opacity-30 grayscale"
+                    }`}
+                  >
                     {[...Array(8)].map((_, i) => (
                       <div
                         key={i}
-                        className="w-1 bg-orange-500 rounded-t-sm animate-pulse"
+                        className={`w-1 bg-orange-500 rounded-t-sm ${
+                          isTimerActive ? "animate-pulse" : ""
+                        }`}
                         style={{
                           height: `${30 + Math.random() * 70}%`,
                           animationDelay: `${i * 0.1}s`,
+                          transition: "height 0.5s ease",
                         }}
                       />
                     ))}
                   </div>
 
-                  {/* vertical vivider */}
+                  {/* vertical divider */}
                   <div className="h-8 w-px bg-white/10 mx-2 hidden sm:block" />
 
                   {/* timer */}
-                  <div className="text-3xl font-mono font-bold text-white/90 tracking-tight">
-                    14:32
+                  <div
+                    className={`text-3xl font-mono font-bold tracking-tight ${
+                      isTimerActive ? "text-white" : "text-white/50"
+                    }`}
+                  >
+                    {formatTime(timeLeft)}
                   </div>
 
-                  {/* resume button */}
-                  <button className="flex items-center gap-3 pl-4 pr-6 py-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold transition-all hover:scale-105 shadow-lg shadow-orange-500/20 group ml-2">
-                    <div className="p-1 rounded bg-white/20 group-hover:bg-white/30 transition-colors">
-                      <Play size={12} fill="currentColor" />
-                    </div>
-                    <span className="uppercase tracking-wider text-[12px]">
-                      Resume
-                    </span>
-                  </button>
+                  {/* controls group8 */}
+                  <div className="flex items-center gap-2 ml-2">
+                    {/* reset button */}
+                    <button
+                      onClick={resetTimer}
+                      className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white
+                      transition-all hover:scale-105 active:scale-90"
+                      title="Reset Timer"
+                    >
+                      <RotateCcw size={18} />
+                    </button>
+
+                    {/* play/pause button */}
+                    <button
+                      onClick={toggleTimer}
+                      className={`flex items-center gap-3 pl-4 pr-6 py-2 rounded-xl font-bold transition-all hover:scale-105
+                        active:scale-95 shadow-lg 
+                      ${
+                        isTimerActive
+                          ? "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/50"
+                          : "bg-orange-500 hover:bg-orange-400 text-white shadow-orange-500/20"
+                      }`}
+                    >
+                      <div
+                        className={`p-1 rounded transition-colors ${
+                          isTimerActive
+                            ? "bg-orange-500 text-white"
+                            : "bg-white/20"
+                        }`}
+                      >
+                        {isTimerActive ? (
+                          <Pause size={12} fill="currentColor" />
+                        ) : (
+                          <Play size={12} fill="currentColor" />
+                        )}
+                      </div>
+                      <span className="uppercase tracking-wider text-[12px]">
+                        {isTimerActive ? "Pause" : "Start"}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </BentoCard>
