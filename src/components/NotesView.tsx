@@ -258,7 +258,7 @@ export default function NotesView() {
       `}</style>
 
       {/* - Sidebar - */}
-      <div className="w-1/4 h-full flex flex-col gap-4 min-w-[220px]">
+      <div className="w-1/4 h-full flex flex-col gap-4 min-w-55">
         {/* search & create button */}
         <div className="flex gap-2">
           <div
@@ -287,7 +287,7 @@ export default function NotesView() {
 
         {/* Note List */}
         <div
-          className="flex-1 bg-black/15 backdrop-blur-xs rounded-2xl border border-white/8
+          className="flex-1 bg-[#0f0f12]/60 backdrop-blur-xl rounded-2xl border border-white/8
           overflow-hidden flex flex-col p-2"
         >
           <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
