@@ -14,7 +14,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
 
   return (
     <div
-      className="drag-region flex flex-col items-center justify-between py-6 w-20 min-w h-[calc(100vh-1.5rem)]
+      className="drag-region flex flex-col items-center justify-between py-6 w-20 min-w h-[calc(100%-1rem)]
                   my-3 ml-3 bg-[#0f0f12]/80 backdrop-blur-xl rounded-2xl border-2 border-indigo-500/30 
                   shadow-2xl z-50 transition-all duration-300"
     >

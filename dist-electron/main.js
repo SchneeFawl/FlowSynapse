@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -17,10 +17,9 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 730,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
-    frame: true,
+    frame: false,
     // Removed title bar and windows default window at the top (false)
     transparent: false,
-    // for future glassmorphism effect (true)
     autoHideMenuBar: true,
     // hiding the menu bar with file options etc.
     backgroundColor: "#00000000",
@@ -28,11 +27,17 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname$1, "preload.mjs"),
       sandbox: false,
-      contextIsolation: true,
-      nodeIntegration: false
+      contextIsolation: false,
+      nodeIntegration: true
     }
   });
   win.setMenu(null);
+  ipcMain.on("minimize-window", () => win == null ? void 0 : win.minimize());
+  ipcMain.on("maximize-window", () => {
+    if (win == null ? void 0 : win.isMaximized()) win == null ? void 0 : win.unmaximize();
+    else win == null ? void 0 : win.maximize();
+  });
+  ipcMain.on("close-window", () => win == null ? void 0 : win.close());
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });

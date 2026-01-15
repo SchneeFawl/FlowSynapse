@@ -3,8 +3,17 @@ import "./App.css";
 import Sidebar from "./components/sidebar";
 import BentoCard from "./components/bentocard";
 import VerticalClock from "./components/verticalclock";
-import RecentNote from "./components/recentnote"; // Import the new component
+import RecentNote from "./components/recentnote";
 import { Activity, Play, Pause, TrendingUp, RotateCcw } from "lucide-react";
+import TitleBar from "./components/TitleBar";
+import NotesView from "./components/NotesView";
+import country_side from "./assets/country_side.png";
+
+// import cold_lake from "./assets/cold_lake.png";
+// import trees from "./assets/trees.jpg";
+// import street from "./assets/japan_street.png";
+// import snowy_hut from "./assets/snowy_hut.png";
+// import beach from "./assets/beach_side.jpg";
 
 function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -42,22 +51,25 @@ function App() {
 
   return (
     <div
-      className="relative w-screen h-screen bg-cover bg-center overflow-hidden font-sans select-none text-slate-200"
+      className="flex flex-col w-screen h-screen bg-cover bg-center overflow-hidden font-sans select-none text-slate-200"
       style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=2074&auto=format&fit=crop')",
+        backgroundImage: `url(${country_side})`,
+        // "url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=2074&auto=format&fit=crop')",
       }}
     >
+      {/* title bar */}
+      <TitleBar pageTitle={activeTab} />
+
       {/* low brightness bg */}
-      <div className="absolute inset-0 bg-[#0B0A0A]/60 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-[#0B0A0A]/49 backdrop-blur-[1.5px] z-0" />
 
       {/* main layout */}
-      <div className="relative z-10 flex w-full h-full">
+      <div className="relative z-10 flex flex-1 overflow-hidden w-full ">
         {/* sidebar */}
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* dashboard space (grid) */}
-        <div className="flex-1 h-full p-4 overflow-hidden">
+        <div className="flex-1 h-full p-4 pb-2 overflow-hidden">
           {/* new grid layout:
               cols: [340px fixed] [146px fixed] [rest of the space]
               rows: [1fr] [1fr] [110px fixed bottom] */}
@@ -114,7 +126,7 @@ function App() {
             {/* bottom left - To-Do list */
             /* row-span-2 - takes up bottom 40% of height */}
             <BentoCard
-              title="To-do tasks"
+              title="To-do list"
               className="col-start-1 col-end-2 row-start-2 row-end-3 bg-purple-500/5 border-purple-500/20"
             >
               <div className="flex flex-col gap-3 h-full justify-center">

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -23,20 +23,27 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 730,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
-    frame: true,             // Removed title bar and windows default window at the top (false)
-    transparent: false,        // for future glassmorphism effect (true)
+    frame: false,             // Removed title bar and windows default window at the top (false)
+    transparent: false,
     autoHideMenuBar: true,    // hiding the menu bar with file options etc.
     backgroundColor: '#00000000', // fully transparent?
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
       sandbox: false,
-      contextIsolation: true,
-      nodeIntegration: false,
+      contextIsolation: false,
+      nodeIntegration: true,
     },
   })
 
-  // Ensure the menu is nullified for production
   win.setMenu(null);
+
+  // window control listeners 
+  ipcMain.on('minimize-window', () => win?.minimize());
+  ipcMain.on('maximize-window', () => {
+    if (win?.isMaximized()) win?.unmaximize();
+    else win?.maximize();
+  });
+  ipcMain.on('close-window', () => win?.close());
 
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())

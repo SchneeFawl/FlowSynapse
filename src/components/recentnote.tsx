@@ -22,7 +22,10 @@ export default function RecentNote({ className = "" }: { className?: string }) {
             </span>
           </div>
         </div>
-        <button className="p-3 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+        <button
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border
+        border-white/5 transition-all hover:scale-105 active:scale-90"
+        >
           <Edit3 size={18} className="text-white/70" />
         </button>
       </div>

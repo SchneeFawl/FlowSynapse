@@ -40,6 +40,13 @@ body {
   @apply h-screen w-screen;
 }
 
+.drag-region {
+  -webkit-app-region: drag;
+}
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
 /*
 @media (prefers-color-scheme: light) {
   :root {
