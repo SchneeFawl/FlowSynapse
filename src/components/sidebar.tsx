@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, ListTodo, Settings2 } from "lucide-react";
+import { LayoutDashboard, FileText, ListTodo } from "lucide-react";
 
 interface SidebarProps {
   activeTab: string;
@@ -58,11 +58,6 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
           );
         })}
       </div>
-
-      {/* settings */}
-      <button className="no-drag text-slate-500 hover:text-indigo-400 transition-colors p-3 hover:bg-indigo-500/10 rounded-xl">
-        <Settings2 size={22} />
-      </button>
     </div>
   );
 }
