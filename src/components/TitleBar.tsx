@@ -20,7 +20,7 @@ export default function TitleBar({ pageTitle = "Dashboard" }: TitleBarProps) {
   return (
     <div className="h-6 bg-[#0B0A0A] flex items-center justify-between select-none z-50 border-b border-white/5">
       {/* Draggable Title Area */}
-      <div className="flex-1 h-full drag-region flex items-center pl-6 gap-3">
+      <div className="flex-1 h-full drag-region flex items-center pl-2 gap-3">
         <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest opacity-60">
           FlowSynapse <span className="mx-2 opacity-30 text-white">/</span>{" "}
           {pageTitle}

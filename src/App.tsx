@@ -29,7 +29,7 @@ function App() {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-      setIsTimerActive(false); // Stop when hitting 0
+      setIsTimerActive(false); // stop when hit 0
     }
     return () => clearInterval(interval);
   }, [isTimerActive, timeLeft]);
@@ -68,201 +68,223 @@ function App() {
         {/* sidebar */}
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {/* dashboard space (grid) */}
+        {/* content area */}
         <div className="flex-1 h-full p-4 pb-2 overflow-hidden">
-          {/* new grid layout:
-              cols: [340px fixed] [146px fixed] [rest of the space]
-              rows: [1fr] [1fr] [110px fixed bottom] */}
-          <div className="grid grid-cols-[340px_160px_1fr] grid-rows-[1fr_1fr_110px] gap-4 w-full h-full">
-            {/* - Left Column - */}
-            {/* top left - Wellness */}
-            <BentoCard
-              title="Wellness"
-              className="col-start-1 col-end-2 row-start-1 row-end-2 bg-emerald-500/5 border-emerald-500/20"
-            >
-              <div className="flex items-center justify-between h-full px-2">
-                {/* left side - spinner */}
-                <div className="flex flex-col items-center gap-2">
-                  <div className="relative size-24 flex items-center justify-center">
-                    <div className="absolute inset-0 rounded-full border-4 border-white/5"></div>
-                    <div
-                      className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin-slow"
-                      style={{ animationDuration: "3s" }}
-                    ></div>
-                    <div className="text-2xl font-bold text-white">88%</div>
-                  </div>
-                  <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1">
-                    <Activity size={10} /> Optimal Energy
-                  </div>
-                </div>
-
-                {/* right side - data */}
-                <div className="flex flex-col items-end justify-center h-full pt-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="p-1 rounded bg-emerald-500/20 text-emerald-400">
-                      <TrendingUp size={14} />
-                    </span>
-                    <span className="text-3xl font-bold text-white">+12%</span>
-                  </div>
-                  <div className="text-xs text-slate-400 font-medium text-right leading-tight">
-                    Recovery Score
-                    <br />
-                    <span className="opacity-50 text-[10px] uppercase tracking-wide">
-                      vs Yesterday
-                    </span>
-                  </div>
-
-                  {/* bar chart */}
-                  <div className="flex gap-1 items-end h-6 mt-4 opacity-50">
-                    <div className="w-1.5 h-3 bg-emerald-500/30 rounded-t-sm" />
-                    <div className="w-1.5 h-4 bg-emerald-500/50 rounded-t-sm" />
-                    <div className="w-1.5 h-2 bg-emerald-500/30 rounded-t-sm" />
-                    <div className="w-1.5 h-6 bg-emerald-500 rounded-t-sm" />
-                  </div>
-                </div>
-              </div>
-            </BentoCard>
-
-            {/* bottom left - To-Do list */
-            /* row-span-2 - takes up bottom 40% of height */}
-            <BentoCard
-              title="To-do list"
-              className="col-start-1 col-end-2 row-start-2 row-end-3 bg-purple-500/5 border-purple-500/20"
-            >
-              <div className="flex flex-col gap-3 h-full justify-center">
-                {[
-                  {
-                    id: 1,
-                    text: "Review the physics chapter",
-                    color: "bg-purple-400",
-                  },
-                  { id: 2, text: "Submit history notes", color: "bg-blue-400" },
-                  {
-                    id: 3,
-                    text: "Call the group for project work",
-                    color: "bg-pink-400",
-                  },
-                ].map((task) => (
-                  <div
-                    key={task.id}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10
-                    transition-colors"
-                  >
-                    <div className={`size-2 rounded-full ${task.color}`} />
-                    <span className="text-sm font-medium opacity-80 truncate">
-                      {task.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </BentoCard>
-
-            {/* - Middle Col - */
-            /* vertical clock */}
-            <BentoCard className="col-start-2 col-end-3 row-start-1 row-end-3 bg-blue-500/5 border-blue-500/20">
-              <VerticalClock />
-            </BentoCard>
-
-            {/* - Right Col - */
-            /* recent note */}
-            <RecentNote className="col-start-3 col-end-4 row-start-1 row-end-3 bg-orange-500/5 border-orange-500/10" />
-
-            {/* - Bottom Row - */}
-            {/* StepAhead timer (focus) */}
-            {/* col-span-4 to span the entire width of the grid*/}
-            <BentoCard className="col-span-3 row-start-3 row-end-4 px-6 bg-orange-500/5 border-orange-500/20">
-              {/* group of StepAhead */}
-              <div className="flex items-center justify-between w-full h-full px-4">
-                {/* left: title */}
-                <div className="flex flex-col justify-center min-w-0 mr-4">
-                  <h3 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">
-                    StepAhead Focus
-                  </h3>
-                  <p className="text-xs text-orange-300/60 uppercase tracking-widest mt-1">
-                    Session Active
-                  </p>
-                </div>
-
-                {/* right: content group (i.e. visualizer, time, button) */}
-                <div className="flex items-center gap-6 h-full shrink-0">
-                  {/* visualizer */}
-                  <div
-                    className={`flex gap-1 items-end h-8 opacity-60 ${
-                      !isTimerActive && "opacity-30 grayscale"
-                    }`}
-                  >
-                    {[...Array(8)].map((_, i) => (
+          {/* view-1 Dashboard */}
+          {activeTab === "dashboard" && (
+            /* new grid layout:
+                cols: [340px fixed] [146px fixed] [rest of the space]
+                rows: [1fr] [1fr] [110px fixed bottom] */
+            <div className="grid grid-cols-[340px_160px_1fr] grid-rows-[1fr_1fr_110px] gap-4 w-full h-full">
+              {/* - Left Column - */}
+              {/* top left - Wellness */}
+              <BentoCard
+                title="Wellness"
+                className="col-start-1 col-end-2 row-start-1 row-end-2 bg-emerald-500/5 border-emerald-500/20"
+              >
+                <div className="flex items-center justify-between h-full px-2">
+                  {/* left side - spinner */}
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="relative size-24 flex items-center justify-center">
+                      <div className="absolute inset-0 rounded-full border-4 border-white/5"></div>
                       <div
-                        key={i}
-                        className={`w-1 bg-orange-500 rounded-t-sm ${
-                          isTimerActive ? "animate-pulse" : ""
-                        }`}
-                        style={{
-                          height: `${30 + Math.random() * 70}%`,
-                          animationDelay: `${i * 0.1}s`,
-                          transition: "height 0.5s ease",
-                        }}
-                      />
-                    ))}
+                        className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin-slow"
+                        style={{ animationDuration: "3s" }}
+                      ></div>
+                      <div className="text-2xl font-bold text-white">88%</div>
+                    </div>
+                    <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-1">
+                      <Activity size={10} /> Optimal Energy
+                    </div>
                   </div>
 
-                  {/* vertical divider */}
-                  <div className="h-8 w-px bg-white/10 mx-2 hidden sm:block" />
+                  {/* right side - data */}
+                  <div className="flex flex-col items-end justify-center h-full pt-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="p-1 rounded bg-emerald-500/20 text-emerald-400">
+                        <TrendingUp size={14} />
+                      </span>
+                      <span className="text-3xl font-bold text-white">
+                        +12%
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-400 font-medium text-right leading-tight">
+                      Recovery Score
+                      <br />
+                      <span className="opacity-50 text-[10px] uppercase tracking-wide">
+                        vs Yesterday
+                      </span>
+                    </div>
 
-                  {/* timer */}
-                  <div
-                    className={`text-3xl font-mono font-bold tracking-tight ${
-                      isTimerActive ? "text-white" : "text-white/50"
-                    }`}
-                  >
-                    {formatTime(timeLeft)}
+                    {/* bar chart */}
+                    <div className="flex gap-1 items-end h-6 mt-4 opacity-50">
+                      <div className="w-1.5 h-3 bg-emerald-500/30 rounded-t-sm" />
+                      <div className="w-1.5 h-4 bg-emerald-500/50 rounded-t-sm" />
+                      <div className="w-1.5 h-2 bg-emerald-500/30 rounded-t-sm" />
+                      <div className="w-1.5 h-6 bg-emerald-500 rounded-t-sm" />
+                    </div>
                   </div>
+                </div>
+              </BentoCard>
 
-                  {/* controls group8 */}
-                  <div className="flex items-center gap-2 ml-2">
-                    {/* reset button */}
-                    <button
-                      onClick={resetTimer}
-                      className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white
-                      transition-all hover:scale-105 active:scale-90"
-                      title="Reset Timer"
+              {/* bottom left - To-Do list */
+              /* row-span-2 - takes up bottom 40% of height */}
+              <BentoCard
+                title="To-do list"
+                className="col-start-1 col-end-2 row-start-2 row-end-3 bg-purple-500/5 border-purple-500/20"
+              >
+                <div className="flex flex-col gap-3 h-full justify-center">
+                  {[
+                    {
+                      id: 1,
+                      text: "Review the physics chapter",
+                      color: "bg-purple-400",
+                    },
+                    {
+                      id: 2,
+                      text: "Submit history notes",
+                      color: "bg-blue-400",
+                    },
+                    {
+                      id: 3,
+                      text: "Call the group for project work",
+                      color: "bg-pink-400",
+                    },
+                  ].map((task) => (
+                    <div
+                      key={task.id}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10
+                      transition-colors"
                     >
-                      <RotateCcw size={18} />
-                    </button>
+                      <div className={`size-2 rounded-full ${task.color}`} />
+                      <span className="text-sm font-medium opacity-80 truncate">
+                        {task.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </BentoCard>
 
-                    {/* play/pause button */}
-                    <button
-                      onClick={toggleTimer}
-                      className={`flex items-center gap-3 pl-4 pr-6 py-2 rounded-xl font-bold transition-all hover:scale-105
-                        active:scale-95 shadow-lg 
-                      ${
-                        isTimerActive
-                          ? "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/50"
-                          : "bg-orange-500 hover:bg-orange-400 text-white shadow-orange-500/20"
+              {/* - Middle Col - */
+              /* vertical clock */}
+              <BentoCard className="col-start-2 col-end-3 row-start-1 row-end-3 bg-blue-500/5 border-blue-500/20">
+                <VerticalClock />
+              </BentoCard>
+
+              {/* - Right Col - */
+              /* recent note */}
+              <RecentNote className="col-start-3 col-end-4 row-start-1 row-end-3 bg-orange-500/5 border-orange-500/10" />
+
+              {/* - Bottom Row - */}
+              {/* StepAhead timer (focus) */}
+              {/* col-span-4 to span the entire width of the grid*/}
+              <BentoCard className="col-span-3 row-start-3 row-end-4 px-6 bg-orange-500/5 border-orange-500/20">
+                {/* group of StepAhead */}
+                <div className="flex items-center justify-between w-full h-full px-4">
+                  {/* left: title */}
+                  <div className="flex flex-col justify-center min-w-0 mr-4">
+                    <h3 className="text-xl font-bold text-white tracking-wide whitespace-nowrap">
+                      StepAhead Focus
+                    </h3>
+                    <p className="text-xs text-orange-300/60 uppercase tracking-widest mt-1">
+                      Session Active
+                    </p>
+                  </div>
+
+                  {/* right: content group (i.e. visualizer, time, button) */}
+                  <div className="flex items-center gap-6 h-full shrink-0">
+                    {/* visualizer */}
+                    <div
+                      className={`flex gap-1 items-end h-8 opacity-60 ${
+                        !isTimerActive && "opacity-30 grayscale"
                       }`}
                     >
-                      <div
-                        className={`p-1 rounded transition-colors ${
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-1 bg-orange-500 rounded-t-sm ${
+                            isTimerActive ? "animate-pulse" : ""
+                          }`}
+                          style={{
+                            height: `${30 + Math.random() * 70}%`,
+                            animationDelay: `${i * 0.1}s`,
+                            transition: "height 0.5s ease",
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* vertical divider */}
+                    <div className="h-8 w-px bg-white/10 mx-2 hidden sm:block" />
+
+                    {/* timer */}
+                    <div
+                      className={`text-3xl font-mono font-bold tracking-tight ${
+                        isTimerActive ? "text-white" : "text-white/50"
+                      }`}
+                    >
+                      {formatTime(timeLeft)}
+                    </div>
+
+                    {/* controls group8 */}
+                    <div className="flex items-center gap-2 ml-2">
+                      {/* reset button */}
+                      <button
+                        onClick={resetTimer}
+                        className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white
+                        transition-all hover:scale-105 active:scale-90"
+                        title="Reset Timer"
+                      >
+                        <RotateCcw size={18} />
+                      </button>
+
+                      {/* play/pause button */}
+                      <button
+                        onClick={toggleTimer}
+                        className={`flex items-center gap-3 pl-4 pr-6 py-2 rounded-xl font-bold transition-all hover:scale-105
+                          active:scale-95 shadow-lg 
+                        ${
                           isTimerActive
-                            ? "bg-orange-500 text-white"
-                            : "bg-white/20"
+                            ? "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border border-orange-500/50"
+                            : "bg-orange-500 hover:bg-orange-400 text-white shadow-orange-500/20"
                         }`}
                       >
-                        {isTimerActive ? (
-                          <Pause size={12} fill="currentColor" />
-                        ) : (
-                          <Play size={12} fill="currentColor" />
-                        )}
-                      </div>
-                      <span className="uppercase tracking-wider text-[12px]">
-                        {isTimerActive ? "Pause" : "Start"}
-                      </span>
-                    </button>
+                        <div
+                          className={`p-1 rounded transition-colors ${
+                            isTimerActive
+                              ? "bg-orange-500 text-white"
+                              : "bg-white/20"
+                          }`}
+                        >
+                          {isTimerActive ? (
+                            <Pause size={12} fill="currentColor" />
+                          ) : (
+                            <Play size={12} fill="currentColor" />
+                          )}
+                        </div>
+                        <span className="uppercase tracking-wider text-[12px]">
+                          {isTimerActive ? "Pause" : "Start"}
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </BentoCard>
-          </div>
+              </BentoCard>
+            </div>
+          )}
+
+          {/* view-2 Notes page */}
+          {activeTab === "notes" && <NotesView />}
+
+          {/* view-3 To-do list */}
+          {activeTab === "todo" && (
+            <div
+              className="flex items-center justify-center w-full h-full text-white/20 uppercase
+            tracking-widest font-bold"
+            >
+              To-Do List Not Done yet
+            </div>
+          )}
         </div>
       </div>
     </div>
