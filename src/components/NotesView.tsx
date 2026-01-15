@@ -41,13 +41,13 @@ export default function NotesView() {
   const editorInstance = useRef<EditorJS | null>(null);
   const previousIdRef = useRef<number>(activeNoteId);
 
-  // Find the active note (removed fallback to notes[0] to prevent stale data loading)
+  // find the active note (removed fallback to notes[0] to prevent stale data loading)
   const activeNote = notes.find((n) => n.id === activeNoteId);
 
   // - Actions -
 
   const saveCurrentNote = async (): Promise<Note[]> => {
-    // If editor isn't ready or note doesn't exist, return current list
+    // if editor isn't ready or note doesn't exist, return current list
     if (!editorInstance.current || !activeNote) return notes;
 
     try {
@@ -285,9 +285,9 @@ export default function NotesView() {
           </button>
         </div>
 
-        {/* Note List */}
+        {/* note list */}
         <div
-          className="flex-1 bg-[#0f0f12]/60 backdrop-blur-xl rounded-2xl border border-white/8
+          className="flex-1 bg-[#0f0f12]/60 backdrop-blur-xl rounded-3xl border border-white/8
           overflow-hidden flex flex-col p-2"
         >
           <div className="flex-1 overflow-y-auto pr-1 space-y-2 custom-scrollbar">
@@ -295,7 +295,7 @@ export default function NotesView() {
               <div
                 key={note.id}
                 onClick={() => handleSwitchNote(note.id)}
-                className={`p-3 rounded-xl cursor-pointer transition-all group ${
+                className={`p-3 rounded-2xl cursor-pointer transition-all group ${
                   activeNoteId === note.id
                     ? "bg-white/10 shadow-md"
                     : "hover:bg-white/5"
@@ -336,7 +336,7 @@ export default function NotesView() {
       >
         {/* top bar with SAVE and DELETE */}
         <div className="flex items-center justify-between p-4 border-b border-white/5">
-          <div className="text-xs text-slate-500 uppercase tracking-widest font-bold">
+          <div className="text-xs text-slate-500 uppercase pl-4 tracking-widest font-bold">
             {activeNoteId === activeNote?.id
               ? "Editing..."
               : "Last saved just now"}

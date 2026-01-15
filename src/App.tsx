@@ -7,6 +7,7 @@ import RecentNote from "./components/recentnote";
 import { Activity, Play, Pause, TrendingUp, RotateCcw } from "lucide-react";
 import TitleBar from "./components/TitleBar";
 import NotesView from "./components/NotesView";
+import TodoView from "./components/TodoView";
 import country_side from "./assets/country_side.png";
 
 // import cold_lake from "./assets/cold_lake.png";
@@ -277,14 +278,7 @@ function App() {
           {activeTab === "notes" && <NotesView />}
 
           {/* view-3 To-do list */}
-          {activeTab === "todo" && (
-            <div
-              className="flex items-center justify-center w-full h-full text-white/20 uppercase
-            tracking-widest font-bold"
-            >
-              To-Do List Not Done yet
-            </div>
-          )}
+          {activeTab === "todo" && <TodoView />}
         </div>
       </div>
     </div>
