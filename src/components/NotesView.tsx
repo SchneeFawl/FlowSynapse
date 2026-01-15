@@ -134,17 +134,17 @@ export default function NotesView() {
 
   // - Editor Initialization -
   useEffect(() => {
-    // 1. If we don't have the note data yet (race condition), wait for next render
+    // if no note data yet, wait for next render
     if (!activeNote) return;
 
-    // 2. Prevent Re-initialization on Save
-    // If editor exists AND the ID hasn't changed, it means we just saved.
-    // We don't want to reload the editor (which kills cursor position).
+    // prevent re-initialization on save
+    // if editor exists and the id hasnt changed, it means it just saved
+    // we dont want to reload the editor , it kills the cursor position
     if (editorInstance.current && activeNoteId === previousIdRef.current) {
       return;
     }
 
-    // 3. Cleanup previous instance if switching IDs
+    // cleanup previous instance if switching ids
     if (editorInstance.current) {
       if (typeof editorInstance.current.destroy === "function") {
         editorInstance.current.destroy();
@@ -152,7 +152,7 @@ export default function NotesView() {
       }
     }
 
-    // 4. HARD RESET DOM
+    // HARD RESET DOM (ffs)
     const container = document.getElementById("editorjs");
     if (container) container.innerHTML = "";
 
@@ -180,10 +180,9 @@ export default function NotesView() {
     previousIdRef.current = activeNoteId;
 
     return () => {
-      // We generally don't destroy here anymore to allow the "Save" optimization above.
-      // We rely on the check at step #3 to destroy old instances.
+      // relying on the check above to destroy old instances
     };
-  }, [activeNoteId, notes]); // Added 'notes' dependency to catch the "Create Note" update
+  }, [activeNoteId, notes]);
 
   return (
     <div className="flex w-full h-full gap-4">
@@ -344,7 +343,7 @@ export default function NotesView() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Save Button */}
+            {/* save button */}
             <button
               onClick={() => saveCurrentNote()}
               className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all
@@ -357,7 +356,7 @@ export default function NotesView() {
               </span>
             </button>
 
-            {/* Delete Button */}
+            {/* delete button */}
             <button
               onClick={handleDeleteNote}
               className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-all"
@@ -368,7 +367,7 @@ export default function NotesView() {
           </div>
         </div>
 
-        {/* Editor Content */}
+        {/* editor content */}
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
           <div
             id="editorjs"
