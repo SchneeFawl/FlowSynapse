@@ -4,7 +4,15 @@ import Sidebar from "./components/sidebar";
 import BentoCard from "./components/bentocard";
 import VerticalClock from "./components/verticalclock";
 import RecentNote from "./components/recentnote";
-import { Activity, Play, Pause, TrendingUp, RotateCcw } from "lucide-react";
+import {
+  Activity,
+  Play,
+  Pause,
+  TrendingUp,
+  RotateCcw,
+  Bell,
+  X,
+} from "lucide-react";
 import TitleBar from "./components/TitleBar";
 import NotesView from "./components/NotesView";
 import TodoView from "./components/TodoView";
@@ -16,22 +24,118 @@ import country_side from "./assets/country_side.png";
 // import snowy_hut from "./assets/snowy_hut.png";
 // import beach from "./assets/beach_side.jpg";
 
+// - Types for Dashboard data (to-do list data) -
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+  category: string;
+}
+
+// - Types for Dashboard data (NotesView data) -
+interface Note {
+  id: number;
+  title: string;
+  date: string;
+  preview: string;
+}
+
 function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
 
-  // StepAhead timer
-  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  // to track which note should be opened when switching tabs
+  const [targetNoteId, setTargetNoteId] = useState<number | null>(null);
+
+  // - Dashboard Data States -
+  const [recentTodos, setRecentTodos] = useState<Todo[]>([]);
+  const [recentNote, setRecentNote] = useState<Note | null>(null);
+
+  // handler for the edit button in dashboard
+  const handleEditNote = (id: number) => {
+    setTargetNoteId(id); // Set the note we want to edit
+    setActiveTab("notes"); // Switch to the notes tab
+  };
+
+  // refresh dashboard data (to-dos & notes)
+  useEffect(() => {
+    if (activeTab === "dashboard") {
+      // fetch to-dos
+      const savedTodos = localStorage.getItem("flowsynapse-todos");
+      if (savedTodos) {
+        const allTodos: Todo[] = JSON.parse(savedTodos);
+        const pending = allTodos.filter((t) => !t.completed).slice(0, 3);
+        setRecentTodos(pending);
+      }
+
+      // fetch recent note
+      const savedNotes = localStorage.getItem("flowsynapse-notes");
+      if (savedNotes) {
+        const allNotes: Note[] = JSON.parse(savedNotes);
+        if (allNotes.length > 0) {
+          // we assume the first note in the list is the most relevant/recent
+          setRecentNote(allNotes[0]);
+        } else {
+          setRecentNote(null);
+        }
+      }
+    }
+  }, [activeTab]);
+
+  // helper to get color based on category (to-dos)
+  const getCategoryColor = (cat: string) => {
+    switch (cat) {
+      case "School":
+        return "bg-purple-400";
+      case "Personal":
+        return "bg-blue-400";
+      case "Project":
+        return "bg-pink-400";
+      default:
+        return "bg-emerald-400";
+    }
+  };
+
+  // StepAhead timer state
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isTimerActive, setIsTimerActive] = useState(false);
 
+  // notification state
+  const [showNotification, setShowNotification] = useState(false);
+
+  // request notification permission on mount
+  useEffect(() => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // StepAhead timer logic (w/ notifcation)
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
+
     if (isTimerActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0) {
-      setIsTimerActive(false); // stop when hit 0
+    } else if (timeLeft === 0 && isTimerActive) {
+      // timer finished
+      setIsTimerActive(false);
+
+      // trigger system notification
+      if (Notification.permission === "granted") {
+        new Notification("StepAhead Focus", {
+          body: "Session complete! Great job, take a break.",
+          silent: false,
+        });
+      }
+
+      // trigger in-app notification
+      setShowNotification(true);
+
+      // auto-hide popup after 10 seconds
+      setTimeout(() => setShowNotification(false), 5000);
     }
+
     return () => clearInterval(interval);
   }, [isTimerActive, timeLeft]);
 
@@ -40,6 +144,7 @@ function App() {
   const resetTimer = () => {
     setIsTimerActive(false);
     setTimeLeft(20 * 60);
+    setShowNotification(false); // hide notification if reset
   };
 
   const formatTime = (seconds: number) => {
@@ -63,6 +168,35 @@ function App() {
 
       {/* low brightness bg */}
       <div className="absolute inset-0 bg-[#0B0A0A]/49 backdrop-blur-[1.5px] z-0" />
+
+      {/* in-app StepAhead notification popup */}
+      {showNotification && (
+        <div className="absolute top-16 right-6 z-50 animate-in fade-in slide-in-from-top-5 duration-300">
+          <div
+            className="flex items-start gap-4 p-4 rounded-2xl bg-[#0f0f12]/85 backdrop-blur-xl border
+            border-white/10 shadow-2xl w-80"
+          >
+            <div className="p-2 bg-emerald-500/20 rounded-xl text-emerald-400 shrink-0">
+              <Bell size={20} />
+            </div>
+            <div className="flex-1">
+              <h4 className="text-sm font-bold text-white mb-1">
+                Session Complete
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                You've successfully completed your focus session. Time to
+                refresh!
+              </p>
+            </div>
+            <button
+              onClick={() => setShowNotification(false)}
+              className="text-slate-500 hover:text-white transition-colors"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* main layout */}
       <div className="relative z-10 flex flex-1 overflow-hidden w-full ">
@@ -129,40 +263,35 @@ function App() {
               </BentoCard>
 
               {/* bottom left - To-Do list */
-              /* row-span-2 - takes up bottom 40% of height */}
+              /* row-span-2 - takes up bottom 40% of height */
+              /* to-do list */}
               <BentoCard
                 title="To-do list"
                 className="col-start-1 col-end-2 row-start-2 row-end-3 bg-purple-500/5 border-purple-500/20"
               >
                 <div className="flex flex-col gap-3 h-full justify-center">
-                  {[
-                    {
-                      id: 1,
-                      text: "Review the physics chapter",
-                      color: "bg-purple-400",
-                    },
-                    {
-                      id: 2,
-                      text: "Submit history notes",
-                      color: "bg-blue-400",
-                    },
-                    {
-                      id: 3,
-                      text: "Call the group for project work",
-                      color: "bg-pink-400",
-                    },
-                  ].map((task) => (
-                    <div
-                      key={task.id}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10
-                      transition-colors"
-                    >
-                      <div className={`size-2 rounded-full ${task.color}`} />
-                      <span className="text-sm font-medium opacity-80 truncate">
-                        {task.text}
-                      </span>
+                  {recentTodos.length === 0 ? (
+                    <div className="text-white/30 text-xs text-center">
+                      No pending tasks.
                     </div>
-                  ))}
+                  ) : (
+                    recentTodos.map((task) => (
+                      <div
+                        key={task.id}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+                      >
+                        {/* Dynamic Color Dot */}
+                        <div
+                          className={`size-2 rounded-full ${getCategoryColor(
+                            task.category
+                          )}`}
+                        />
+                        <span className="text-sm font-medium opacity-80 truncate">
+                          {task.text}
+                        </span>
+                      </div>
+                    ))
+                  )}
                 </div>
               </BentoCard>
 
@@ -173,8 +302,12 @@ function App() {
               </BentoCard>
 
               {/* - Right Col - */
-              /* recent note */}
-              <RecentNote className="col-start-3 col-end-4 row-start-1 row-end-3 bg-orange-500/5 border-orange-500/10" />
+              /* recent note (now dynamic) */}
+              <RecentNote
+                className="col-start-3 col-end-4 row-start-1 row-end-3 bg-orange-500/5 border-orange-500/10"
+                note={recentNote}
+                onEdit={handleEditNote}
+              />
 
               {/* - Bottom Row - */}
               {/* StepAhead timer (focus) */}

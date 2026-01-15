@@ -30,22 +30,37 @@ const INITIAL_NOTES: Note[] = [
   },
 ];
 
-export default function NotesView() {
+// add props to interface
+interface NotesViewProps {
+  selectedId?: number | null;
+}
+
+export default function NotesView({ selectedId }: NotesViewProps) {
   // - State -
   const [notes, setNotes] = useState<Note[]>(() => {
     const saved = localStorage.getItem("flowsynapse-notes");
     return saved ? JSON.parse(saved) : INITIAL_NOTES;
   });
 
-  const [activeNoteId, setActiveNoteId] = useState<number>(notes[0]?.id || 1);
+  // initialize with selectedId if present otherwise default to first note
+  const [activeNoteId, setActiveNoteId] = useState<number>(
+    selectedId || notes[0]?.id || 1
+  );
+
   const editorInstance = useRef<EditorJS | null>(null);
   const previousIdRef = useRef<number>(activeNoteId);
+
+  // sync prop changes to state (this handles the switch from dashboard)
+  useEffect(() => {
+    if (selectedId) {
+      setActiveNoteId(selectedId);
+    }
+  }, [selectedId]);
 
   // find the active note (removed fallback to notes[0] to prevent stale data loading)
   const activeNote = notes.find((n) => n.id === activeNoteId);
 
   // - Actions -
-
   const saveCurrentNote = async (): Promise<Note[]> => {
     // if editor isn't ready or note doesn't exist, return current list
     if (!editorInstance.current || !activeNote) return notes;
@@ -317,10 +332,7 @@ export default function NotesView() {
                 >
                   {note.preview}
                 </p>
-                <div
-                  className="flex items-center gap-2 mt-3 text-[10px] text-slate-300 font-bold uppercase
-                  tracking-wider"
-                >
+                <div className="flex items-center gap-2 mt-3 text-[10px] text-slate-300 font-bold uppercase tracking-wider">
                   <FileText size={10} /> {note.date}
                 </div>
               </div>
