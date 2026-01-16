@@ -42,7 +42,6 @@ export default function TodoView() {
   });
 
   const [inputText, setInputText] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All Tasks");
   const [activeFilter, setActiveFilter] = useState("All Tasks"); // for sidebar selection
 
   // - Actions -

@@ -37,5 +37,26 @@
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
+  "build": {
+    "appId": "com.flowsynapse.app",
+    "productName": "FlowSynapse",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "win": {
+      "target": "portable", 
+      "icon": "build/icon.ico" 
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
   "main": "dist-electron/main.js"
 }

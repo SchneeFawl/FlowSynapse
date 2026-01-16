@@ -38,6 +38,7 @@ interface Note {
   title: string;
   date: string;
   preview: string;
+  blocks?: any[];
 }
 
 function App() {
@@ -163,10 +164,10 @@ function App() {
         // "url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=2074&auto=format&fit=crop')",
       }}
     >
-      {/* title bar */}
+      {/* Title Bar */}
       <TitleBar pageTitle={activeTab} />
 
-      {/* low brightness bg */}
+      {/* Low Brightness Background */}
       <div className="absolute inset-0 bg-[#0B0A0A]/49 backdrop-blur-[1.5px] z-0" />
 
       {/* in-app StepAhead notification popup */}
@@ -408,7 +409,9 @@ function App() {
           )}
 
           {/* view-2 Notes page */}
-          {activeTab === "notes" && <NotesView />}
+          {activeTab === "notes" && (
+            <NotesView key="notes" selectedId={targetNoteId} />
+          )}
 
           {/* view-3 To-do list */}
           {activeTab === "todo" && <TodoView />}
